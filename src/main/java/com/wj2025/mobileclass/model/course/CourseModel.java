@@ -1,7 +1,5 @@
 package com.wj2025.mobileclass.model.course;
 
-import java.util.Date;
-
 public class CourseModel {
     private String id;
     private String course_name;

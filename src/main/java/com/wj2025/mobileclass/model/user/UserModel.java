@@ -2,12 +2,19 @@ package com.wj2025.mobileclass.model.user;
 
 public class UserModel {
     private int id;
+    private String username;
     private String name;
     private int age;
     private String address;
     private String phone;
     private String email;
     private String password;
+    public String getUsername() {
+        return username;
+    }
+    public void setUsername(String username) {
+        this.username = username;
+    }
     public String getName() {
         return name;
     }

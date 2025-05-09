@@ -1,4 +1,4 @@
-package com.wj2025.mobileclass.model.user;
+package com.wj2025.mobileclass.model.permission;
 
 public class User_RolesModel {
     private int id;
