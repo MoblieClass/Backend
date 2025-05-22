@@ -1,6 +1,12 @@
 package com.wj2025.mobileclass.model.course;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "xm05_course_user_course")
 public class CourseModel {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     private String course_name;
     private String teacher_name;

@@ -1,8 +1,14 @@
-package com.wj2025.mobileclass.model;
+package com.wj2025.mobileclass.model.log;
+
+import jakarta.persistence.*;
 
 import java.util.Date;
 
+@Entity
+@Table(name="xw05_log")
 public class LogModel {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     private String title;
     private String content;

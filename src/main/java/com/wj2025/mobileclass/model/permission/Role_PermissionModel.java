@@ -1,6 +1,12 @@
 package com.wj2025.mobileclass.model.permission;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "xw05_role_permission")
 public class Role_PermissionModel {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private int role_id;
     private int permission_id;

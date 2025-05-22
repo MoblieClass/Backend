@@ -1,8 +1,14 @@
 package com.wj2025.mobileclass.model.reward;
 
+import jakarta.persistence.*;
+
 import java.util.Date;
 
+@Entity
+@Table(name = "xw05_reward_user")
 public class Reward_User_Commit {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private int reward_id;
     private int user_id;

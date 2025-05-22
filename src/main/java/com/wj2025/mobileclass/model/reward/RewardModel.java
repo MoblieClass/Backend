@@ -1,6 +1,12 @@
 package com.wj2025.mobileclass.model.reward;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "xw05_reward")
 public class RewardModel {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String title;
     private String description;
