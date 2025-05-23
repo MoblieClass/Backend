@@ -1,7 +1,14 @@
 package com.wj2025.mobileclass.model.user;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "xw05_users")
 public class UserModel {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(unique = true, nullable = false)
     private String username;
     private String name;
     private int age;
@@ -56,8 +63,5 @@ public class UserModel {
     }
     public void setId(int id) {
         this.id = id;
-    }
-    public UserModel(String name) {
-        this.name = name;
     }
 }

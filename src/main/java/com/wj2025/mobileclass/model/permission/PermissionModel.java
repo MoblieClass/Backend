@@ -7,14 +7,17 @@ import jakarta.persistence.*;
 public class PermissionModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
-    private String title;
+    private int id;
+    private String title; // 权限称号
     private String description;
-    private String permissions;
-    public String getId() {
+
+    @Column(unique = true)
+    private String permission_name; // 内部权限名，最原子权限，唯一
+
+    public int getId() {
         return id;
     }
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
     public String getTitle() {
@@ -29,10 +32,10 @@ public class PermissionModel {
     public void setDescription(String description) {
         this.description = description;
     }
-    public String getPermissions() {
-        return permissions;
+    public String getPermission_name() {
+        return permission_name;
     }
-    public void setPermissions(String permissions) {
-        this.permissions = permissions;
+    public void setPermission_name(String permissions) {
+        this.permission_name = permissions;
     }
 }
