@@ -2,6 +2,8 @@ package com.wj2025.mobileclass.service.Service;
 
 import com.wj2025.mobileclass.model.log.LogModel;
 import com.wj2025.mobileclass.service.IService.log.ILogService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -23,27 +25,33 @@ public class LogService {
         logService.save(model);
     }
 
-    public List<LogModel> getLogs() {
-        return logService.findAll();
+    public List<LogModel> getLogs(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return logService.findAll(pageable).getContent();
     }
 
-    public List<LogModel> getLogsByClass(String classification) {
-        return logService.findByClassification(classification);
+    public List<LogModel> getLogsByClass(String classification, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return logService.findByClassification(classification,pageable);
     }
 
-    public List<LogModel> getLogsByTitle(String title) {
-        return logService.findByTitle(title);
+    public List<LogModel> getLogsByTitle(String title, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return logService.findByTitleContaining(title,pageable);
     }
 
-    public List<LogModel> getLogsByContent(String content) {
-        return logService.findByContent(content);
+    public List<LogModel> getLogsByContent(String content, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return logService.findByContentContaining(content,pageable);
     }
 
-    public List<LogModel> getLogsByTitleAndContent(String title, String content) {
-        return logService.findByTitleAndContent(title, content);
+    public List<LogModel> getLogsByTitleAndContent(String title, String content,int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return logService.findByTitleContainingAndContentContaining(title, content,pageable);
     }
 
-    public List<LogModel> getLogsByDateBetween(Date start, Date end) {
-        return logService.findByDateBetween(start, end);
+    public List<LogModel> getLogsByDateBetween(Date start, Date end,int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return logService.findByDateBetween(start, end,pageable);
     }
 }

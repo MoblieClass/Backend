@@ -2,6 +2,8 @@ package com.wj2025.mobileclass.model.reward;
 
 import jakarta.persistence.*;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "xw05_reward")
 public class RewardModel {
@@ -10,8 +12,8 @@ public class RewardModel {
     private int id;
     private String title;
     private String description;
-    private String start_date;
-    private String end_date;
+    private Date start_date;
+    private Date end_date;
     private boolean is_finished;
     private int bonus;
     private int creator_id;
@@ -34,16 +36,16 @@ public class RewardModel {
     public void setDescription(String description) {
         this.description = description;
     }
-    public String getStart_date() {
+    public Date getStart_date() {
         return start_date;
     }
-    public void setStart_date(String start_date) {
+    public void setStart_date(Date start_date) {
         this.start_date = start_date;
     }
-    public String getEnd_date() {
+    public Date getEnd_date() {
         return end_date;
     }
-    public void setEnd_date(String end_date) {
+    public void setEnd_date(Date end_date) {
         this.end_date = end_date;
     }
     public boolean isIs_finished() {

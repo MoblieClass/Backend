@@ -30,7 +30,7 @@ public class PermissionService {
     }
 
     public boolean addPermission(String title, String description,String permission_name) {
-        var permissions = permissionService.findBypermission_name(permission_name);
+        var permissions = permissionService.findBypermission_nameContaining(permission_name);
         if (permissions.isPresent()) {
             return false;
         }
@@ -43,7 +43,7 @@ public class PermissionService {
     }
 
     public boolean deletePermission(String permission_name) {
-        var permissions = permissionService.findBypermission_name(permission_name);
+        var permissions = permissionService.findBypermission_nameContaining(permission_name);
         if (permissions.isPresent()) {
             permissionService.delete(permissions.get());
             return true;
@@ -52,7 +52,7 @@ public class PermissionService {
     }
 
     public List<PermissionModel> getPermissionByTitle(String title) {
-        return permissionService.getPermissionByTitle(title);
+        return permissionService.getPermissionByTitleContaining(title);
     }
 
     public RolesModel addRole(String role_name,String description) {
@@ -63,7 +63,7 @@ public class PermissionService {
     }
 
     public boolean deleteRole(String role_name) {
-        var role = roleService.findByName(role_name);
+        var role = roleService.findByNameContaining(role_name);
         if(role.isPresent()) {
             roleService.delete(role.get());
             return true;
@@ -72,9 +72,9 @@ public class PermissionService {
     }
 
     public boolean addPermissionToRole(String role_name, String permission_name) {
-        var permission = permissionService.findBypermission_name(permission_name);
+        var permission = permissionService.findBypermission_nameContaining(permission_name);
         if(permission.isPresent()) {
-            var role = roleService.findByName(role_name);
+            var role = roleService.findByNameContaining(role_name);
             if(role.isPresent()) {
                 var role_permission = new Role_PermissionModel();
                 role_permission.setPermission_id(permission.get().getId());
@@ -88,9 +88,9 @@ public class PermissionService {
     }
 
     public boolean deletePermissionFromRole(String role_name, String permission_name) {
-        var permission = permissionService.findBypermission_name(permission_name);
+        var permission = permissionService.findBypermission_nameContaining(permission_name);
         if(permission.isPresent()) {
-            var role = roleService.findByName(role_name);
+            var role = roleService.findByNameContaining(role_name);
             if(role.isPresent()) {
                 var role_permission = role_permissionService.findBypermission_idAndrole_id(permission.get().getId(),role.get().getId());
                 if(role_permission.isPresent()) {
@@ -105,7 +105,7 @@ public class PermissionService {
     }
 
     public boolean addRoleToUser(String role_name, String user_name) {
-        var role = roleService.findByName(role_name);
+        var role = roleService.findByNameContaining(role_name);
         if(role.isPresent()) {
             var user = userServiece.findByUsername(user_name);
             if(user.isPresent()) {
@@ -121,7 +121,7 @@ public class PermissionService {
     }
 
     public boolean deleteRoleFromUser(String role_name, String user_name) {
-        var role = roleService.findByName(role_name);
+        var role = roleService.findByNameContaining(role_name);
         if(role.isPresent()) {
             var user = userServiece.findByUsername(user_name);
             if(user.isPresent()) {
@@ -129,6 +129,29 @@ public class PermissionService {
                 return true;
             }
             return false;
+        }
+        return false;
+    }
+
+    public boolean checkHasPermission(String user_name, String permission_name) {
+        // 获取用户
+        var user = userServiece.findByUsername(user_name);
+        if(user.isPresent()) {
+            // 获取用户——角色关联
+            var userRoles = user_rolesService.findByuser_id(user.get().getId());
+            for(var userRole : userRoles) {
+                // 获取角色——权限关联
+                var permissions = role_permissionService.findByrole_id(userRole.getRole_id());
+                for(var permission:permissions){
+                    // 获取权限，判断
+                    var perm = permissionService.findById((long)permission.getPermission_id());
+                    if(perm.isPresent()) {
+                        if(perm.get().getPermission_name().equals(permission_name)){
+                            return true;
+                        }
+                    }
+                }
+            }
         }
         return false;
     }

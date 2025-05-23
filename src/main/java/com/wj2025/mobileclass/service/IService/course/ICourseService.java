@@ -1,13 +1,14 @@
 package com.wj2025.mobileclass.service.IService.course;
 
 import com.wj2025.mobileclass.model.course.CourseModel;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
 public interface ICourseService extends JpaRepository<CourseModel,Long> {
-    List<CourseModel> findBycourse_name(String course_name);
-    List<CourseModel> findBycourse_type(String course_type);
-    List<CourseModel> findByClassroom(String classroom);
-    List<CourseModel> findByteacher_name(String teacher_name);
+    List<CourseModel> findBycourse_nameContaining(String course_name, Pageable pageable);
+    List<CourseModel> findBycourse_type(String course_type, Pageable pageable);
+    List<CourseModel> findByClassroomContaining(String classroom, Pageable pageable);
+    List<CourseModel> findByteacher_nameContaining(String teacher_name, Pageable pageable);
 }

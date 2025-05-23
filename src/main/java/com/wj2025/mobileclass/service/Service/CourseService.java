@@ -4,6 +4,8 @@ import com.wj2025.mobileclass.model.course.CourseModel;
 import com.wj2025.mobileclass.model.course.Course_UserModel;
 import com.wj2025.mobileclass.service.IService.course.ICourseService;
 import com.wj2025.mobileclass.service.IService.course.ICourse_UserService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,11 +30,13 @@ public class CourseService {
     }
 
     // get
-    public List<CourseModel> getAllCourses() {
-        return courseService.findAll();
+    public List<CourseModel> getAllCourses(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return courseService.findAll(pageable).getContent();
     }
-    public List<Course_UserModel> getAllCourseUsers() {
-        return courseUserService.findAll();
+    public List<Course_UserModel> getAllCourseUsers(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return courseUserService.findAll(pageable).getContent();
     }
 
     public Optional<CourseModel> getCourseById(long id) {
@@ -41,27 +45,33 @@ public class CourseService {
     public Optional<Course_UserModel> getCourseUserById(long id) {
         return courseUserService.findById(id);
     }
-    public List<Course_UserModel> getCourseUserByUserId(long id) {
-        return courseUserService.findByUserId(id);
+    public List<Course_UserModel> getCourseUserByUserId(long id, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return courseUserService.findByUserId(id,pageable);
     }
-    public List<Course_UserModel> getCourseUserByCourseId(long id) {
-        return  courseUserService.findByCourseId(id);
-    }
-
-    public List<CourseModel> getCoursesByCourseName(String courseName) {
-        return courseService.findBycourse_name(courseName);
+    public List<Course_UserModel> getCourseUserByCourseId(long id,int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return  courseUserService.findByCourseId(id,pageable);
     }
 
-    public List<CourseModel> getCoursesByClassroom(String classroom) {
-        return courseService.findByClassroom(classroom);
+    public List<CourseModel> getCoursesByCourseName(String courseName,int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return courseService.findBycourse_nameContaining(courseName,pageable);
     }
 
-    public List<CourseModel> getCoursesByCourseType(String courseType) {
-        return courseService.findBycourse_type(courseType);
+    public List<CourseModel> getCoursesByClassroom(String classroom,int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return courseService.findByClassroomContaining(classroom,pageable);
     }
 
-    public List<CourseModel> getCoursesByTeacherName(String teacherName) {
-        return courseService.findByteacher_name(teacherName);
+    public List<CourseModel> getCoursesByCourseType(String courseType,int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return courseService.findBycourse_type(courseType,pageable);
+    }
+
+    public List<CourseModel> getCoursesByTeacherName(String teacherName,int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return courseService.findByteacher_nameContaining(teacherName,pageable);
     }
 
     // delete

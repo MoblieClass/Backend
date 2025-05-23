@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "xw05_reward_user")
+@Table(name = "xw05_reward_user_commit")
 public class Reward_User_Commit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
