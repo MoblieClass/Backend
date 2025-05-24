@@ -11,7 +11,9 @@ import com.wj2025.mobileclass.service.IService.permission.IUser_RolesService;
 import com.wj2025.mobileclass.service.IService.user.IUserServiece;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PermissionService {
@@ -53,6 +55,26 @@ public class PermissionService {
 
     public List<PermissionModel> getPermissionByTitle(String title) {
         return permissionService.getPermissionByTitleContaining(title);
+    }
+
+    public List<RolesModel> getUserRoles(int id) {
+        var roles_links = user_rolesService.findByuser_id(id);
+        var rolesModels = new ArrayList<RolesModel>();
+        for (var role_link : roles_links) {
+            Optional<RolesModel> role = roleService.findById((long)role_link.getRole_id());
+            role.ifPresent(rolesModels::add);
+        }
+        return rolesModels;
+    }
+
+    public List<PermissionModel> getPermissionByRoleId(int id) {
+        var permissions_links = role_permissionService.findByrole_id(id);
+        var permissionsModels = new ArrayList<PermissionModel>();
+        for (var permission_link : permissions_links) {
+            Optional<PermissionModel> permission = permissionService.findById((long)permission_link.getPermission_id());
+            permission.ifPresent(permissionsModels::add);
+        }
+        return permissionsModels;
     }
 
     public RolesModel addRole(String role_name,String description) {
