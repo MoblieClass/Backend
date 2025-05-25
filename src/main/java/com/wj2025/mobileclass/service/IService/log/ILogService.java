@@ -12,5 +12,5 @@ public interface ILogService extends JpaRepository<LogModel,Long> {
     List<LogModel> findByTitleContaining(String title, Pageable pageable);
     List<LogModel> findByContentContaining(String content, Pageable pageable);
     List<LogModel> findByTitleContainingAndContentContaining(String title, String content, Pageable pageable);
-    List<LogModel> findByDateBetween(Date start, Date end, Pageable pageable);
+    List<LogModel> findByDateTimeBetween(Date start, Date end, Pageable pageable);
 }

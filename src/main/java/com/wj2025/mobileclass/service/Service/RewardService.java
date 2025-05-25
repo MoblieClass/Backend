@@ -24,20 +24,20 @@ public class RewardService {
         var reward = new RewardModel();
         reward.setTitle(title);
         reward.setDescription(description);
-        reward.setStart_date(start_date);
-        reward.setEnd_date(end_date);
-        reward.setIs_finished(is_finished);
+        reward.setStartDate(start_date);
+        reward.setEndDate(end_date);
+        reward.setIsFinished(is_finished);
         reward.setBonus(bonus);
-        reward.setCreator_id(creator_id);
+        reward.setCreatorId(creator_id);
         rewardService.save(reward);
     }
 
     public void addRewardUserCommit(int reward_id, int user_id,String content) {
         var rewardUserCommit = new Reward_User_Commit();
-        rewardUserCommit.setReward_id(reward_id);
-        rewardUserCommit.setUser_id(user_id);
+        rewardUserCommit.setRewardId(reward_id);
+        rewardUserCommit.setUserId(user_id);
         rewardUserCommit.setContent(content);
-        rewardUserCommit.setCreated_at(new Date(System.currentTimeMillis()));
+        rewardUserCommit.setCreatedAt(new Date(System.currentTimeMillis()));
         reward_User_CommitService.save(rewardUserCommit);
     }
 
@@ -56,12 +56,12 @@ public class RewardService {
 
     public List<Reward_User_Commit> getRewardUserCommitsByRewardId(int reward_id,int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return reward_User_CommitService.findByreward_id(reward_id,pageable);
+        return reward_User_CommitService.findByRewardId(reward_id,pageable);
     }
 
     public List<Reward_User_Commit> getRewardUserCommitsByUserId(int user_id,int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return reward_User_CommitService.findByuser_id(user_id,pageable);
+        return reward_User_CommitService.findByUserId(user_id,pageable);
     }
 
     public void removeReward(int id){

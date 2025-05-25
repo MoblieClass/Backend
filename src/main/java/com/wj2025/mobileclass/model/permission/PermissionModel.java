@@ -12,7 +12,7 @@ public class PermissionModel {
     private String description;
 
     @Column(unique = true)
-    private String permission_name; // 内部权限名，最原子权限，唯一
+    private String permissionName; // 内部权限名，最原子权限，唯一
 
     public int getId() {
         return id;
@@ -32,10 +32,10 @@ public class PermissionModel {
     public void setDescription(String description) {
         this.description = description;
     }
-    public String getPermission_name() {
-        return permission_name;
+    public String getPermissionName() {
+        return permissionName;
     }
-    public void setPermission_name(String permissions) {
-        this.permission_name = permissions;
+    public void setPermissionName(String permissions) {
+        this.permissionName = permissions;
     }
 }

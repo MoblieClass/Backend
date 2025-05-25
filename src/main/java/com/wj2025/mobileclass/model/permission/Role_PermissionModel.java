@@ -8,24 +8,24 @@ public class Role_PermissionModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private int role_id;
-    private int permission_id;
+    private int roleId;
+    private int permissionId;
     public int getId() {
         return id;
     }
     public void setId(int id) {
         this.id = id;
     }
-    public int getRole_id() {
-        return role_id;
+    public int getRoleId() {
+        return roleId;
     }
-    public void setRole_id(int role_id) {
-        this.role_id = role_id;
+    public void setRoleId(int role_id) {
+        this.roleId = role_id;
     }
-    public int getPermission_id() {
-        return permission_id;
+    public int getPermissionId() {
+        return permissionId;
     }
-    public void setPermission_id(int permission_id) {
-        this.permission_id = permission_id;
+    public void setPermissionId(int permission_id) {
+        this.permissionId = permission_id;
     }
 }

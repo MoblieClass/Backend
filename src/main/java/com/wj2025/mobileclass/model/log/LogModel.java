@@ -9,15 +9,15 @@ import java.util.Date;
 public class LogModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private int id;
     private String title;
     private String content;
-    private Date date;
+    private Date dateTime;
     private String classification;
-    public String getId() {
+    public int getId() {
         return id;
     }
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
     public String getTitle() {
@@ -32,11 +32,11 @@ public class LogModel {
     public void setContent(String content) {
         this.content = content;
     }
-    public Date getDate() {
-        return date;
+    public Date getDateTime() {
+        return dateTime;
     }
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDateTime(Date dateTime) {
+        this.dateTime = dateTime;
     }
     public String getClassification() {
         return classification;

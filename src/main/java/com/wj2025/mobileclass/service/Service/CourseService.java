@@ -56,7 +56,7 @@ public class CourseService {
 
     public List<CourseModel> getCoursesByCourseName(String courseName,int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return courseService.findBycourse_nameContaining(courseName,pageable);
+        return courseService.findByCourseNameContaining(courseName,pageable);
     }
 
     public List<CourseModel> getCoursesByClassroom(String classroom,int page, int size) {
@@ -66,12 +66,12 @@ public class CourseService {
 
     public List<CourseModel> getCoursesByCourseType(String courseType,int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return courseService.findBycourse_type(courseType,pageable);
+        return courseService.findByCourseType(courseType,pageable);
     }
 
     public List<CourseModel> getCoursesByTeacherName(String teacherName,int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return courseService.findByteacher_nameContaining(teacherName,pageable);
+        return courseService.findByTeacherNameContaining(teacherName,pageable);
     }
 
     // delete

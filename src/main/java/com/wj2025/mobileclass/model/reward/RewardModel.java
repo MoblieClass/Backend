@@ -12,11 +12,11 @@ public class RewardModel {
     private int id;
     private String title;
     private String description;
-    private Date start_date;
-    private Date end_date;
-    private boolean is_finished;
+    private Date startDate;
+    private Date endDate;
+    private boolean isFinished;
     private int bonus;
-    private int creator_id;
+    private int creatorId;
 
     public int getId() {
         return id;
@@ -36,23 +36,23 @@ public class RewardModel {
     public void setDescription(String description) {
         this.description = description;
     }
-    public Date getStart_date() {
-        return start_date;
+    public Date getStartDate() {
+        return startDate;
     }
-    public void setStart_date(Date start_date) {
-        this.start_date = start_date;
+    public void setStartDate(Date start_date) {
+        this.startDate = start_date;
     }
-    public Date getEnd_date() {
-        return end_date;
+    public Date getEndDate() {
+        return endDate;
     }
-    public void setEnd_date(Date end_date) {
-        this.end_date = end_date;
+    public void setEndDate(Date end_date) {
+        this.endDate = end_date;
     }
-    public boolean isIs_finished() {
-        return is_finished;
+    public boolean isIsFinished() {
+        return isFinished;
     }
-    public void setIs_finished(boolean is_finished) {
-        this.is_finished = is_finished;
+    public void setIsFinished(boolean is_finished) {
+        this.isFinished = is_finished;
     }
     public int getBonus() {
         return bonus;
@@ -60,10 +60,10 @@ public class RewardModel {
     public void setBonus(int bonus) {
         this.bonus = bonus;
     }
-    public int getCreator_id() {
-        return creator_id;
+    public int getCreatorId() {
+        return creatorId;
     }
-    public void setCreator_id(int creator_id) {
-        this.creator_id = creator_id;
+    public void setCreatorId(int creator_id) {
+        this.creatorId = creator_id;
     }
 }

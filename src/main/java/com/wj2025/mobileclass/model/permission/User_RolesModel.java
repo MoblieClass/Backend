@@ -8,24 +8,24 @@ public class User_RolesModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private int user_id;
-    private int role_id;
+    private int userId;
+    private int roleId;
     public int getId() {
         return id;
     }
     public void setId(int id) {
         this.id = id;
     }
-    public int getUser_id() {
-        return user_id;
+    public int getUserId() {
+        return userId;
     }
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUserId(int user_id) {
+        this.userId = user_id;
     }
-    public int getRole_id() {
-        return role_id;
+    public int getRoleId() {
+        return roleId;
     }
-    public void setRole_id(int role_id) {
-        this.role_id = role_id;
+    public void setRoleId(int role_id) {
+        this.roleId = role_id;
     }
 }

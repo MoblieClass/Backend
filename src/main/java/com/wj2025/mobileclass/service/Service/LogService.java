@@ -20,7 +20,7 @@ public class LogService {
         var model = new LogModel();
         model.setTitle(title);
         model.setContent(content);
-        model.setDate(date);
+        model.setDateTime(date);
         model.setClassification(classification);
         logService.save(model);
     }
@@ -52,6 +52,6 @@ public class LogService {
 
     public List<LogModel> getLogsByDateBetween(Date start, Date end,int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return logService.findByDateBetween(start, end,pageable);
+        return logService.findByDateTimeBetween(start, end,pageable);
     }
 }

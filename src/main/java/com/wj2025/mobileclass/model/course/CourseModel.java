@@ -7,38 +7,38 @@ import jakarta.persistence.*;
 public class CourseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
-    private String course_name;
-    private String teacher_name;
-    private String course_type;
+    private int id;
+    private String courseName;
+    private String teacherName;
+    private String courseType;
     private String classroom;
-    private String start_time;
-    private String end_time;
-    private String start_week;
-    private String end_week;
-    public String getId() {
+    private String startTime;
+    private String endTime;
+    private String startWeek;
+    private String endWeek;
+    public int getId() {
         return id;
     }
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
-    public String getCourse_name() {
-        return course_name;
+    public String getCourseName() {
+        return courseName;
     }
-    public void setCourse_name(String course_name) {
-        this.course_name = course_name;
+    public void setCourseName(String course_name) {
+        this.courseName = course_name;
     }
-    public String getTeacher_name() {
-        return teacher_name;
+    public String getTeacherName() {
+        return teacherName;
     }
-    public void setTeacher_name(String teacher_name) {
-        this.teacher_name = teacher_name;
+    public void setTeacherName(String teacher_name) {
+        this.teacherName = teacher_name;
     }
-    public String getCourse_type() {
-        return course_type;
+    public String getCourseType() {
+        return courseType;
     }
-    public void setCourse_type(String course_type) {
-        this.course_type = course_type;
+    public void setCourseType(String course_type) {
+        this.courseType = course_type;
     }
     public String getClassroom() {
         return classroom;
@@ -46,28 +46,28 @@ public class CourseModel {
     public void setClassroom(String classroom) {
         this.classroom = classroom;
     }
-    public String getStart_time() {
-        return start_time;
+    public String getStartTime() {
+        return startTime;
     }
-    public void setStart_time(String start_time) {
-        this.start_time = start_time;
+    public void setStartTime(String start_time) {
+        this.startTime = start_time;
     }
-    public String getEnd_time() {
-        return end_time;
+    public String getEndTime() {
+        return endTime;
     }
-    public void setEnd_time(String end_time) {
-        this.end_time = end_time;
+    public void setEndTime(String end_time) {
+        this.endTime = end_time;
     }
-    public String getStart_week() {
-        return start_week;
+    public String getStartWeek() {
+        return startWeek;
     }
-    public void setStart_week(String start_week) {
-        this.start_week = start_week;
+    public void setStartWeek(String start_week) {
+        this.startWeek = start_week;
     }
-    public String getEnd_week() {
-        return end_week;
+    public String getEndWeek() {
+        return endWeek;
     }
-    public void setEnd_week(String end_week) {
-        this.end_week = end_week;
+    public void setEndWeek(String end_week) {
+        this.endWeek = end_week;
     }
 }
