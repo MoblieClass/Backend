@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class PermissionModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     private String title; // 权限称号
     private String description;
 
@@ -17,7 +17,7 @@ public class PermissionModel {
     public int getId() {
         return id;
     }
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
     public String getTitle() {

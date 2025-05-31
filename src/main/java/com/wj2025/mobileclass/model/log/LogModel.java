@@ -9,7 +9,7 @@ import java.util.Date;
 public class LogModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     private String title;
     private String content;
     private Date dateTime;
@@ -17,7 +17,7 @@ public class LogModel {
     public int getId() {
         return id;
     }
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
     public String getTitle() {

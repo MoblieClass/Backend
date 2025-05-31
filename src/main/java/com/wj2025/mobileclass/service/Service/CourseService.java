@@ -81,6 +81,9 @@ public class CourseService {
     public void deleteCourseUserById(long id) {
         courseUserService.deleteById(id);
     }
+    public void deleteCourseUserByUserIdAndCourseId(int userId, int courseId) {
+        courseUserService.deleteByUserIdAndCourseId(userId,courseId);
+    }
 
     // modify
     public void modifyCourse(CourseModel course) {

@@ -21,14 +21,29 @@ public class PermissionService {
     private final IRoleService roleService;
     private final IRole_PermissionService role_permissionService;
     private final IUser_RolesService user_rolesService;
-    private final IUserServiece userServiece;
+    private final IUserServiece userService;
 
-    public PermissionService(IPermissionService permissionService,IRoleService roleService,IRole_PermissionService role_permissionService,IUser_RolesService user_rolesService,IUserServiece userServiece) {
+    public PermissionService(IPermissionService permissionService,IRoleService roleService,IRole_PermissionService role_permissionService,IUser_RolesService user_rolesService,IUserServiece userService) {
         this.permissionService = permissionService;
         this.roleService = roleService;
         this.role_permissionService = role_permissionService;
         this.user_rolesService = user_rolesService;
-        this.userServiece = userServiece;
+        this.userService = userService;
+    }
+
+    public List<RolesModel> getAllRoles(){
+        return roleService.findAll();
+    }
+    public List<PermissionModel>getAllPermissions(){
+        return permissionService.findAll();
+    }
+
+    public Optional<RolesModel>getRole(String roleName){
+        return roleService.findByName(roleName);
+    }
+
+    public Optional<PermissionModel>getPermission(String permissionName){
+        return permissionService.findByPermissionName(permissionName);
     }
 
     public boolean addPermission(String title, String description,String permission_name) {
@@ -57,8 +72,12 @@ public class PermissionService {
         return permissionService.findByTitleContaining(title);
     }
 
-    public List<RolesModel> getUserRoles(int id) {
-        var roles_links = user_rolesService.findByUserId(id);
+    public List<RolesModel> getUserRoles(String username) {
+        var users = userService.findByUsername(username);
+        if (users.isEmpty()) {
+            return new ArrayList<>();
+        }
+        var roles_links = user_rolesService.findByUserId(users.get().getId());
         var rolesModels = new ArrayList<RolesModel>();
         for (var role_link : roles_links) {
             Optional<RolesModel> role = roleService.findById((long)role_link.getRoleId());
@@ -85,7 +104,7 @@ public class PermissionService {
     }
 
     public boolean deleteRole(String role_name) {
-        var role = roleService.findByNameContaining(role_name);
+        var role = roleService.findByName(role_name);
         if(role.isPresent()) {
             roleService.delete(role.get());
             return true;
@@ -96,7 +115,7 @@ public class PermissionService {
     public boolean addPermissionToRole(String role_name, String permission_name) {
         var permission = permissionService.findByPermissionNameContaining(permission_name);
         if(permission.isPresent()) {
-            var role = roleService.findByNameContaining(role_name);
+            var role = roleService.findByName(role_name);
             if(role.isPresent()) {
                 var role_permission = new Role_PermissionModel();
                 role_permission.setPermissionId(permission.get().getId());
@@ -112,7 +131,7 @@ public class PermissionService {
     public boolean deletePermissionFromRole(String role_name, String permission_name) {
         var permission = permissionService.findByPermissionNameContaining(permission_name);
         if(permission.isPresent()) {
-            var role = roleService.findByNameContaining(role_name);
+            var role = roleService.findByName(role_name);
             if(role.isPresent()) {
                 var role_permission = role_permissionService.findByPermissionIdAndRoleId(permission.get().getId(),role.get().getId());
                 if(role_permission.isPresent()) {
@@ -127,9 +146,9 @@ public class PermissionService {
     }
 
     public boolean addRoleToUser(String role_name, String user_name) {
-        var role = roleService.findByNameContaining(role_name);
+        var role = roleService.findByName(role_name);
         if(role.isPresent()) {
-            var user = userServiece.findByUsername(user_name);
+            var user = userService.findByUsername(user_name);
             if(user.isPresent()) {
                 User_RolesModel user_rolesModel = new User_RolesModel();
                 user_rolesModel.setRoleId(role.get().getId());
@@ -143,9 +162,9 @@ public class PermissionService {
     }
 
     public boolean deleteRoleFromUser(String role_name, String user_name) {
-        var role = roleService.findByNameContaining(role_name);
+        var role = roleService.findByName(role_name);
         if(role.isPresent()) {
-            var user = userServiece.findByUsername(user_name);
+            var user = userService.findByUsername(user_name);
             if(user.isPresent()) {
                 user_rolesService.deleteByUserIdAndRoleId(user.get().getId(),role.get().getId());
                 return true;
@@ -157,7 +176,7 @@ public class PermissionService {
 
     public boolean checkHasPermission(String user_name, String permission_name) {
         // 获取用户
-        var user = userServiece.findByUsername(user_name);
+        var user = userService.findByUsername(user_name);
         if(user.isPresent()) {
             // 获取用户——角色关联
             var userRoles = user_rolesService.findByUserId(user.get().getId());

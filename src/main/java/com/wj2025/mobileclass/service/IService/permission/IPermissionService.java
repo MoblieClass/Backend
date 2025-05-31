@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface IPermissionService extends JpaRepository<PermissionModel,Long> {
     List<PermissionModel> findByTitleContaining(String Title);
     Optional<PermissionModel> findByPermissionNameContaining(String PermissionName);
+    Optional<PermissionModel> findByPermissionName(String permissionName);
 }

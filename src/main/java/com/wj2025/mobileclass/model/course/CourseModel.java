@@ -3,11 +3,11 @@ package com.wj2025.mobileclass.model.course;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "xm05_course_user_course")
+@Table(name = "xm05_course")
 public class CourseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     private String courseName;
     private String teacherName;
     private String courseType;
@@ -19,7 +19,7 @@ public class CourseModel {
     public int getId() {
         return id;
     }
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
     public String getCourseName() {

@@ -25,8 +25,8 @@ public class UserService {
         return userService.findById((long)id).orElse(null);
     }
 
-    public UserModel getUserByUsername(String username){
-        return userService.findByUsername(username).orElse(null);
+    public Optional<UserModel> getUserByUsername(String username){
+        return userService.findByUsername(username);
     }
 
     public List<UserModel> getUserByName(String name,int page, int size){
@@ -71,35 +71,7 @@ public class UserService {
         return false;
     }
 
-    public boolean modifyUser(int id, String password, String name, String phone, String email,int age,String address){
-        Optional<UserModel> user = userService.findById((long) id);
-        if(user.isPresent()){
-            UserModel userModel = user.get();
-            userModel.setPassword(password);
-            userModel.setName(name);
-            userModel.setPhone(phone);
-            userModel.setEmail(email);
-            userModel.setAge(age);
-            userModel.setAddress(address);
-            userService.save(userModel);
-            return true;
-        }
-        return false;
-    }
-
-    public boolean modifyUserByUsername(String username, String password, String name, String phone, String email,int age,String address){
-        Optional<UserModel> user = userService.findByUsername(username);
-        if(user.isPresent()){
-            UserModel userModel = user.get();
-            userModel.setPassword(password);
-            userModel.setName(name);
-            userModel.setPhone(phone);
-            userModel.setEmail(email);
-            userModel.setAge(age);
-            userModel.setAddress(address);
-            userService.save(userModel);
-            return true;
-        }
-        return false;
+    public void modifyUser(UserModel user){
+        userService.save(user);
     }
 }

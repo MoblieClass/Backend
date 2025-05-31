@@ -27,11 +27,8 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/login").permitAll()
-                        .requestMatchers("/swagger-ui/**").permitAll()
-                        .requestMatchers("/v3/api-docs/**").permitAll()
-                        .requestMatchers("/api/CheckService").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/v3/api-docs").permitAll()
+                        .anyRequest().permitAll()
                 );
         return http.build();
     }

@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface IUserServiece extends JpaRepository<UserModel,Long> {
     Optional<UserModel> findByUsername(String userName);
-
+    Optional<UserModel> findByEmail(String email);
     List<UserModel> findByName(String name, Pageable pageable);
 }

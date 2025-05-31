@@ -9,4 +9,6 @@ import java.util.List;
 public interface ICourse_UserService extends JpaRepository<Course_UserModel,Long> {
     List<Course_UserModel> findByUserId(long id, Pageable pageable);
     List<Course_UserModel> findByCourseId(long id, Pageable pageable);
+
+    void deleteByUserIdAndCourseId(int userId, int courseId);
 }

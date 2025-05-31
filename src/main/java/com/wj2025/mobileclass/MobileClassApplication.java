@@ -12,6 +12,7 @@ public class MobileClassApplication {
         Environment env = context.getEnvironment();
         int port = env.getProperty("server.port", Integer.class, 8080); // 默认 8080
         System.out.println("Server is running at http://localhost:" + port);
+        System.out.println("Swagger: http://localhost:"+port+"/swagger-ui/index.html");
     }
 
 }

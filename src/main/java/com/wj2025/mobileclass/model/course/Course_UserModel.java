@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 public class Course_UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     private int userId;
     private int courseId;
@@ -16,7 +16,7 @@ public class Course_UserModel {
     public int getId() {
         return id;
     }
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
     public int getUserId() {

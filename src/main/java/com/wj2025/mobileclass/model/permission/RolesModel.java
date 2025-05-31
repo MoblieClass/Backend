@@ -7,7 +7,8 @@ import jakarta.persistence.*;
 public class RolesModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
+    @Column(unique = true, nullable = false)
     private String name;
     private String description;
 
@@ -26,7 +27,7 @@ public class RolesModel {
     public void setName(String name) {
         this.name = name;
     }
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 }

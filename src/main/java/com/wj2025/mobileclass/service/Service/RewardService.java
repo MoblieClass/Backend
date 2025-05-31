@@ -8,7 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -20,7 +20,7 @@ public class RewardService {
         this.reward_User_CommitService = reward_User_CommitService;
     }
 
-    public void addReward(String title, String description, Date start_date, Date end_date, boolean is_finished, int bonus, int creator_id) {
+    public void addReward(String title, String description, LocalDateTime start_date, LocalDateTime end_date, boolean is_finished, String bonus, int creator_id) {
         var reward = new RewardModel();
         reward.setTitle(title);
         reward.setDescription(description);
@@ -37,7 +37,7 @@ public class RewardService {
         rewardUserCommit.setRewardId(reward_id);
         rewardUserCommit.setUserId(user_id);
         rewardUserCommit.setContent(content);
-        rewardUserCommit.setCreatedAt(new Date(System.currentTimeMillis()));
+        rewardUserCommit.setCreatedAt(LocalDateTime.now());
         reward_User_CommitService.save(rewardUserCommit);
     }
 
@@ -70,5 +70,17 @@ public class RewardService {
 
     public void removeRewardUserCommit(int id){
         reward_User_CommitService.deleteById((long) id);
+    }
+
+    public RewardModel updateReward(Long id, String title, String description, LocalDateTime startDate, LocalDateTime endDate, boolean isFinished, String bonus, int creator_id) {
+        var reward = new RewardModel();
+        reward.setTitle(title);
+        reward.setDescription(description);
+        reward.setStartDate(startDate);
+        reward.setEndDate(endDate);
+        reward.setIsFinished(isFinished);
+        reward.setBonus(bonus);
+        reward.setCreatorId(creator_id);
+        return rewardService.save(reward);
     }
 }

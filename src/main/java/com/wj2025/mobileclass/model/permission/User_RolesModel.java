@@ -7,13 +7,13 @@ import jakarta.persistence.*;
 public class User_RolesModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     private int userId;
     private int roleId;
     public int getId() {
         return id;
     }
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
     public int getUserId() {

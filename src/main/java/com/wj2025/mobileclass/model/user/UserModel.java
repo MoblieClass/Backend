@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     @Column(unique = true, nullable = false)
     private String username;
     private String name;
@@ -15,7 +15,9 @@ public class UserModel {
     private String address;
     private String phone;
     private String email;
+    @Column(nullable = false)
     private String password;
+    private String avatar;
     public String getUsername() {
         return username;
     }
@@ -61,7 +63,13 @@ public class UserModel {
     public int getId() {
         return id;
     }
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
+    }
+    public String getAvatar() {
+        return avatar;
+    }
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }
