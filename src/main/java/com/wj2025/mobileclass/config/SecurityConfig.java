@@ -1,7 +1,6 @@
 package com.wj2025.mobileclass.config;
 
 import com.wj2025.mobileclass.utils.JwtFilter;
-import com.wj2025.mobileclass.utils.JwtUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
