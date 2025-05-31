@@ -1,14 +1,18 @@
 package com.wj2025.mobileclass;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.env.Environment;
 
 @SpringBootApplication
 public class MobileClassApplication {
-
     public static void main(String[] args) {
-        System.out.println("Server is running at http://localhost:8080/");
-        SpringApplication.run(MobileClassApplication.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(MobileClassApplication.class, args);
+        Environment env = context.getEnvironment();
+        int port = env.getProperty("server.port", Integer.class, 8080); // 默认 8080
+        System.out.println("Server is running at http://localhost:" + port);
     }
 
 }
