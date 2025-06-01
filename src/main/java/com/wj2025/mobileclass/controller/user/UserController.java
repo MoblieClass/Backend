@@ -3,12 +3,17 @@ package com.wj2025.mobileclass.controller.user;
 import com.wj2025.mobileclass.model.user.UserModel;
 import com.wj2025.mobileclass.service.Service.PermissionService;
 import com.wj2025.mobileclass.service.Service.UserService;
+import com.wj2025.mobileclass.utils.CacheUtils;
+import com.wj2025.mobileclass.utils.EmailUtils;
+import com.wj2025.mobileclass.utils.Sha256;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/user")
@@ -19,9 +24,11 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
     private final PermissionService permissionService;
-    public UserController(UserService userService, PermissionService permissionService) {
+    private final EmailUtils emailUtils;
+    public UserController(UserService userService, PermissionService permissionService, EmailUtils emailUtils) {
         this.userService = userService;
         this.permissionService = permissionService;
+        this.emailUtils = emailUtils;
     }
 
     @GetMapping("/self")
@@ -96,6 +103,43 @@ public class UserController {
         }
         var roles = permissionService.getUserRoles(username);
         return ResponseEntity.ok(roles);
+    }
+
+    @PostMapping("/forgetPassword")
+    @Operation(summary = "忘记密码")
+    public ResponseEntity<?> forgetPassword(@RequestParam ForgetPasswordRequest request){
+        var findUser = userService.getUserByUsername(request.getUsername());
+        if(findUser.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if(!findUser.get().getEmail().equals(request.getEmail())){
+            return ResponseEntity.badRequest().body("error email");
+        }
+        var cache = CacheUtils.getInstance();
+        var uid = UUID.randomUUID().toString();
+        var result = emailUtils.sendMail(request.email, "[Mobile Class] - 重置密码请求","尊敬的"+request.username+"\n您好，您收到这份邮件是因为您在平台上发起了忘记密码请求，您的恢复码为 "+uid+" ,请在3分钟内输入后重置密码，如果不是您的操作，请忽略此邮件。");
+        if(result){
+            cache.setValue("forgetPasswd_"+request.username, uid,3);
+        }
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/resetPassword")
+    @Operation(summary = "重置密码")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest request){
+        var findUser = userService.getUserByUsername(request.getUsername());
+        if(findUser.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        var user = findUser.get();
+        var cache = CacheUtils.getInstance();
+        var uid = cache.getValue("forgetPasswd_"+request.username);
+        if(uid==null || !uid.equals(request.uid)){
+            return ResponseEntity.badRequest().body("error uid");
+        }
+        user.setPassword(request.getPassword());
+        userService.modifyUser(user);
+        return ResponseEntity.ok("success");
     }
 
     public static class SimpleUserInfo{
@@ -208,6 +252,54 @@ public class UserController {
 
         public void setAvatar(String avatar) {
             this.avatar = avatar;
+        }
+    }
+
+    public static class ForgetPasswordRequest{
+        private String username;
+        private String email;
+
+        public String getUsername() {
+            return username;
+        }
+        public void setUsername(String username) {
+            this.username = username;
+        }
+        public String getEmail() {
+            return email;
+        }
+        public void setEmail(String email) {
+            this.email = email;
+        }
+    }
+
+    public static class ResetPasswordRequest{
+        private String username;
+        private String password;
+        private String uid;
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
+        public String getUid() {
+            return uid;
+        }
+
+        public void setUid(String uid) {
+            this.uid = uid;
         }
     }
 }

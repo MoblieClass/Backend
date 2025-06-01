@@ -1,6 +1,5 @@
 package com.wj2025.mobileclass.utils;
 
-import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;

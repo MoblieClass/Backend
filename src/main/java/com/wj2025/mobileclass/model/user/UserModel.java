@@ -14,6 +14,7 @@ public class UserModel {
     private int age;
     private String address;
     private String phone;
+    @Column(nullable = false)
     private String email;
     @Column(nullable = false)
     private String password;

@@ -1,6 +1,5 @@
 package com.wj2025.mobileclass.controller.reward;
 
-import com.wj2025.mobileclass.model.reward.RewardModel;
 import com.wj2025.mobileclass.service.Service.PermissionService;
 import com.wj2025.mobileclass.service.Service.RewardService;
 import com.wj2025.mobileclass.service.Service.UserService;
