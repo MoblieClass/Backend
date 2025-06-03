@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RewardService {
@@ -52,6 +53,10 @@ public class RewardService {
 
     public RewardModel getRewardByTitle(String title) {
         return rewardService.findByTitleContaining(title);
+    }
+
+    public Optional<Reward_User_Commit> getRewardUserCommitById(int id) {
+        return reward_User_CommitService.findById((long)id);
     }
 
     public List<Reward_User_Commit> getRewardUserCommitsByRewardId(int reward_id,int page, int size) {

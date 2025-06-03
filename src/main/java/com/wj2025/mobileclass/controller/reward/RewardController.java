@@ -124,6 +124,47 @@ public class RewardController {
         }
     }
 
+    @PostMapping("/commit/{id}")
+    @Operation(summary = "提交悬赏任务")
+    public ResponseEntity<?>commitReward(@PathVariable int id,@RequestBody String content) {
+        var reward = rewardService.getRewardById(id);
+        if(reward == null) {
+            return ResponseEntity.notFound().build();
+        }
+        var currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        var user = userService.getUserByUsername(currentUsername);
+        if(user.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if(!content.isEmpty()) {
+            return ResponseEntity.badRequest().body("empty content");
+        }
+        if(reward.getEndDate().isAfter(LocalDateTime.now())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("reward finished");
+        }
+        rewardService.addRewardUserCommit(id,user.get().getId(),content);
+        return ResponseEntity.ok("success");
+    }
+
+    @DeleteMapping("/commit/{id}")
+    @Operation(summary = "删除提交的悬赏")
+    public ResponseEntity<?>deleteCommitReward(@PathVariable int id) {
+        var rewardCommit = rewardService.getRewardUserCommitById(id);
+        if(rewardCommit.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        var user = userService.getUserByUsername(currentUsername);
+        if(user.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if(rewardCommit.get().getUserId()!=user.get().getId()&&!permissionService.checkHasPermission(currentUsername, "root")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Permission denied");
+        }
+        rewardService.removeReward(id);
+        return ResponseEntity.ok("success");
+    }
+
     public static class AddRewardRequest {
         private String title;
         private String description;
