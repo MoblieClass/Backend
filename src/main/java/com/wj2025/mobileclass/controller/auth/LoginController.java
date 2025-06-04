@@ -51,7 +51,10 @@ public class LoginController {
 
     @PostMapping("/register")
     @Operation(summary = "注册用户")
-    public ResponseEntity<?>registerUser(RegisterRequest request) {
+    public ResponseEntity<?>registerUser(@RequestBody RegisterRequest request) {
+        if(request.username==null || request.password==null || request.email==null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         var usernameUser = userServiece.findByUsername(request.username);
         if(usernameUser.isPresent()) {
             return new ResponseEntity<>("Username already exist", HttpStatus.BAD_REQUEST);

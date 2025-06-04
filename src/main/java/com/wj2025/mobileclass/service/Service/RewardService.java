@@ -51,8 +51,8 @@ public class RewardService {
         return rewardService.findById(id).orElse(null);
     }
 
-    public RewardModel getRewardByTitle(String title) {
-        return rewardService.findByTitleContaining(title);
+    public List<RewardModel> getRewardByTitle(String title) {
+        return rewardService.findAllByTitleContaining(title);
     }
 
     public Optional<Reward_User_Commit> getRewardUserCommitById(int id) {
@@ -77,8 +77,9 @@ public class RewardService {
         reward_User_CommitService.deleteById((long) id);
     }
 
-    public RewardModel updateReward(Long id, String title, String description, LocalDateTime startDate, LocalDateTime endDate, boolean isFinished, String bonus, int creator_id) {
+    public RewardModel updateReward(int id, String title, String description, LocalDateTime startDate, LocalDateTime endDate, boolean isFinished, String bonus, int creator_id) {
         var reward = new RewardModel();
+        reward.setId(id);
         reward.setTitle(title);
         reward.setDescription(description);
         reward.setStartDate(startDate);

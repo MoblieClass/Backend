@@ -31,11 +31,16 @@ public class UserService {
 
     public List<UserModel> getUserByName(String name,int page, int size){
         Pageable pageable = PageRequest.of(page, size);
-        return userService.findByName(name,pageable);
+        return userService.findAllByNameContaining(name,pageable);
+    }
+
+    public Optional<UserModel> getUserByEmail(String email, int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+        return userService.findByEmail(email);
     }
 
     public boolean existsByUsername(String username){
-        return getUserByUsername(username) != null;
+        return getUserByUsername(username).isPresent();
     }
 
     public boolean addUser(String username, String password,String name, String phone, String email,int age,String address){

@@ -30,12 +30,13 @@ public class RewardController {
 
     @GetMapping("/all")
     @Operation(summary = "获取全部悬赏")
-    public ResponseEntity<?>getAllReward(@RequestParam int page, @RequestParam int size) {
-        page-=1;
-        if(page < 0 || size<=0 || size>100) {
-            return ResponseEntity.badRequest().body("error parameter");
+    public ResponseEntity<?>getAllReward(@RequestParam(required = false) String title,@RequestParam int page, @RequestParam int size) {
+        if(title==null || title.trim().isEmpty()) {
+            return ResponseEntity.ok(rewardService.getRewards(page,size));
+        }else{
+            var rewards = rewardService.getRewardByTitle(title);
+            return ResponseEntity.ok(rewards);
         }
-        return ResponseEntity.ok(rewardService.getRewards(page,size));
     }
 
     @GetMapping("{id}")
@@ -68,7 +69,7 @@ public class RewardController {
     @PostMapping("{id}")
     @Operation(summary = "修改悬赏任务，需要权限 reward:modify")
     public ResponseEntity<?> updateReward(
-            @PathVariable Long id,
+            @PathVariable int id,
             @RequestBody AddRewardRequest addRewardRequest) {
         var currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         var user = userService.getUserByUsername(currentUsername);

@@ -5,7 +5,6 @@ import com.wj2025.mobileclass.service.Service.PermissionService;
 import com.wj2025.mobileclass.service.Service.UserService;
 import com.wj2025.mobileclass.utils.CacheUtils;
 import com.wj2025.mobileclass.utils.EmailUtils;
-import com.wj2025.mobileclass.utils.Sha256;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
@@ -45,7 +44,7 @@ public class UserController {
 
     @PostMapping("/self")
     @Operation(summary = "修改自身资料")
-    public ResponseEntity<?> updateUser(@RequestBody UserUpdateDTO dto) {
+    public ResponseEntity<?> updateUser(@RequestBody UserUpdateRequest dto) {
         String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
         var self = userService.getUserByUsername(currentUser);
 
@@ -142,6 +141,101 @@ public class UserController {
         return ResponseEntity.ok("success");
     }
 
+    @PostMapping("/add")
+    @Operation(summary = "添加用户，需要权限 user:create")
+    public ResponseEntity<?>addUser(@RequestBody UserAddRequest request){
+        if(request.username==null || request.password==null || request.email==null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        var addUser_username = userService.getUserByUsername(request.username);
+        if(addUser_username.isPresent()){
+            return ResponseEntity.badRequest().body("username already exist");
+        }
+        var addUser_email = userService.getUserByUsername(request.email);
+        if(addUser_email.isPresent()){
+            return ResponseEntity.badRequest().body("email already exist");
+        }
+        var username = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(permissionService.checkHasPermission(username,"user:create") || permissionService.checkHasPermission(username,"root")){
+            var result = userService.addUser(request.username,request.password, request.name, request.phone, request.email, request.age, request.address);
+            return ResponseEntity.ok(result);
+        }else{
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("permission denied");
+        }
+    }
+
+    @GetMapping("/all")
+    @Operation(summary = "查询所有用户，需要权限 user:read")
+    public ResponseEntity<?> getAllUsers(@RequestParam(required = false)String name,@RequestParam int page, @RequestParam int size) {
+        var currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!permissionService.checkHasPermission(currentUser, "user:read") &&
+                !permissionService.checkHasPermission(currentUser, "root")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("permission denied");
+        }
+        if(name==null || name.isEmpty()){
+            var users = userService.getAllUsers(page, size);
+            return ResponseEntity.ok(users);
+        }else{
+            var users = userService.getUserByName(name,page,size);
+            return ResponseEntity.ok(users);
+        }
+    }
+
+    @GetMapping("/email")
+    @Operation(summary = "按照邮箱查询用户，需要权限 user:read")
+    public ResponseEntity<?> getUserByEmail(@RequestParam String email){
+        var currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!permissionService.checkHasPermission(currentUser, "user:read") &&
+                !permissionService.checkHasPermission(currentUser, "root")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("permission denied");
+        }
+        var user = userService.getUserByUsername(email);
+        if(user.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(user);
+    }
+
+    @PostMapping("/{username}")
+    @Operation(summary = "更新用户信息，需要权限 user:modify")
+    public ResponseEntity<?> updateUser(@PathVariable String username,@RequestBody UserUpdateRequest request){
+        var currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!permissionService.checkHasPermission(currentUser, "user:modify") &&
+                !permissionService.checkHasPermission(currentUser, "root")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("permission denied");
+        }
+        var user = userService.getUserByUsername(username);
+        if(user.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        var user_instance = user.get();
+        user_instance.setEmail(request.email);
+        user_instance.setName(request.name);
+        user_instance.setPhone(request.phone);
+        user_instance.setAge(request.age);
+        user_instance.setAddress(request.address);
+        user_instance.setPassword(request.password);
+        userService.modifyUser(user_instance);
+        return ResponseEntity.ok("success");
+    }
+
+    @DeleteMapping("{username}")
+    @Operation(summary = "删除用户，需要权限 user:delete")
+    public ResponseEntity<?> deleteUser(@PathVariable String username){
+        var currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!permissionService.checkHasPermission(currentUser, "user:delete") &&
+                !permissionService.checkHasPermission(currentUser, "root")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("permission denied");
+        }
+        var user = userService.getUserByUsername(username);
+        if(user.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        var user_instance = user.get();
+        userService.deleteUser(user_instance.getId());
+        return ResponseEntity.ok("success");
+    }
+
     public static class SimpleUserInfo{
         public int id;
         public String username;
@@ -189,7 +283,7 @@ public class UserController {
         }
     }
 
-    public static class UserUpdateDTO {
+    public static class UserUpdateRequest {
         private String password;
         private String name;
         private Integer age;       // 使用包装类型可以为 null
@@ -300,6 +394,72 @@ public class UserController {
 
         public void setUid(String uid) {
             this.uid = uid;
+        }
+    }
+
+    public static class UserAddRequest{
+        private String username;
+        private String name;
+        private int age;
+        private String address;
+        private String phone;
+        private String password;
+        private String email;
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public int getAge() {
+            return age;
+        }
+
+        public void setAge(int age) {
+            this.age = age;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
         }
     }
 }
