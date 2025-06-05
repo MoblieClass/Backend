@@ -2,6 +2,7 @@ package com.wj2025.mobileclass.controller.course;
 
 import com.wj2025.mobileclass.model.course.CourseModel;
 import com.wj2025.mobileclass.model.course.Course_UserModel;
+import com.wj2025.mobileclass.model.user.UserModel;
 import com.wj2025.mobileclass.service.Service.CourseService;
 import com.wj2025.mobileclass.service.Service.PermissionService;
 import com.wj2025.mobileclass.service.Service.UserService;
@@ -12,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api/course")
@@ -143,7 +146,8 @@ public class CourseController {
             return ResponseEntity.badRequest().body("course user not found");
         }
         // 权限验证
-        if(permissionService.checkHasPermission(SecurityContextHolder.getContext().getAuthentication().getName(),"courseUser:create") || permissionService.checkHasPermission(username,"root")){
+        var currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(permissionService.checkHasPermission(currentUser,"courseUser:create") || permissionService.checkHasPermission(currentUser,"root")){
             var courseUser = new Course_UserModel();
             courseUser.setId(null);
             courseUser.setCourseId(course.get().getId());
@@ -168,11 +172,61 @@ public class CourseController {
         String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
         if(permissionService.checkHasPermission(currentUser, "courseUser:delete") ||
                 permissionService.checkHasPermission(currentUser, "root")) {
-            courseService.deleteCourseUserByUserIdAndCourseId(user.get().getId(),course.get().getId());
+            courseService.deleteCourseUserByCourseIdAndUserId(course.get().getId(),user.get().getId());
             return ResponseEntity.ok("user removed from course successfully");
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("permission denied");
         }
+    }
+
+    @GetMapping("/{id}/students")
+    @Operation(summary = "获取课堂学生，需要权限 course:read")
+    public ResponseEntity<?>getCourseUsers(@PathVariable int id) {
+        var currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(!permissionService.checkHasPermission(currentUser,"courseUser:read") && !permissionService.checkHasPermission(currentUser,"root")){
+            return ResponseEntity.badRequest().body("permission denied");
+        }
+        var course = courseService.getCourseById(id);
+        if(course.isEmpty()) {
+            return ResponseEntity.badRequest().body("course not found");
+        }
+        var users = courseService.getCourseUserByCourseId(course.get().getId());
+        var back = new ArrayList<UserModel>();
+        for(var user : users) {
+            var userModel = userService.getUser(user.getUserId());
+            if(userModel.isEmpty()) {
+                continue;
+            }
+            back.add(userModel.get());
+        }
+        return ResponseEntity.ok(back);
+    }
+
+    @GetMapping("/stu_course/{username}")
+    @Operation(summary = "获取用户课表，需要权限 userCourse:read")
+    public ResponseEntity<?>getStudentsCourse(@PathVariable String username) {
+        var currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        var user = userService.getUserByUsername(currentUser);
+        if(user.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("unauthorized");
+        }
+        if(!user.get().getUsername().equals(username) && !permissionService.checkHasPermission(currentUser,"userCourse:read") && !permissionService.checkHasPermission(currentUser,"root")) {
+            return ResponseEntity.badRequest().body("permission denied");
+        }
+        var userfind = userService.getUserByUsername(username);
+        if(userfind.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var courseUser = courseService.getCourseUserByUserId(userfind.get().getId());
+        var back = new ArrayList<CourseModel>();
+        for(var u: courseUser) {
+            var course = courseService.getCourseById(u.getCourseId());
+            if(course.isEmpty()) {
+                continue;
+            }
+            back.add(course.get());
+        }
+        return ResponseEntity.ok(back);
     }
 
 

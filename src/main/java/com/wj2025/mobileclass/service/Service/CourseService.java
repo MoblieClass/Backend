@@ -42,16 +42,14 @@ public class CourseService {
     public Optional<CourseModel> getCourseById(long id) {
         return courseService.findById(id);
     }
-    public Optional<Course_UserModel> getCourseUserById(long id) {
-        return courseUserService.findById(id);
+
+
+    public List<Course_UserModel> getCourseUserByCourseId(long id) {
+        return courseUserService.findByCourseId(id);
     }
-    public List<Course_UserModel> getCourseUserByUserId(long id, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return courseUserService.findByUserId(id,pageable);
-    }
-    public List<Course_UserModel> getCourseUserByCourseId(long id,int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return  courseUserService.findByCourseId(id,pageable);
+
+    public  List<Course_UserModel> getCourseUserByUserId(long user_id) {
+        return courseUserService.findByUserId(user_id);
     }
 
     public List<CourseModel> getCoursesByCourseName(String courseName,int page, int size) {
@@ -74,6 +72,7 @@ public class CourseService {
         return courseService.findByTeacherNameContaining(teacherName,pageable);
     }
 
+
     // delete
     public void deleteCourseById(long id) {
         courseService.deleteById(id);
@@ -81,8 +80,13 @@ public class CourseService {
     public void deleteCourseUserById(long id) {
         courseUserService.deleteById(id);
     }
-    public void deleteCourseUserByUserIdAndCourseId(int userId, int courseId) {
-        courseUserService.deleteByUserIdAndCourseId(userId,courseId);
+    public void deleteCourseUserByCourseIdAndUserId(long courseId, long userId) {
+        List<Course_UserModel> r = courseUserService.findAll();
+        for(var u:r){
+            if(u.getUserId()==userId && u.getCourseId()==courseId){
+                courseUserService.deleteById((long)u.getId());
+            }
+        }
     }
 
     // modify

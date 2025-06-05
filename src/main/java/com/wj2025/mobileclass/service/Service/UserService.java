@@ -21,8 +21,8 @@ public class UserService {
         return userService.findAll(pageable).getContent();
     }
 
-    public UserModel getUser(int id){
-        return userService.findById((long)id).orElse(null);
+    public Optional<UserModel> getUser(int id){
+        return userService.findById((long) id);
     }
 
     public Optional<UserModel> getUserByUsername(String username){

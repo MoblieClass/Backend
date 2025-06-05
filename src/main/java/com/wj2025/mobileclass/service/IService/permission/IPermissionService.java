@@ -1,6 +1,7 @@
 package com.wj2025.mobileclass.service.IService.permission;
 
 import com.wj2025.mobileclass.model.permission.PermissionModel;
+import com.wj2025.mobileclass.model.permission.User_RolesModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

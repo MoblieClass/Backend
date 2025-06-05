@@ -10,8 +10,8 @@ public class Course_UserModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private int userId;
-    private int courseId;
+    private Integer userId;
+    private Integer courseId;
 
     public int getId() {
         return id;

@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface IUser_RolesService extends JpaRepository<User_RolesModel,Long> {
-    void deleteByUserIdAndRoleId(int user_id, int role_id);
     List<User_RolesModel> findByUserId(int id);
+    List<User_RolesModel> findByUserIdAndRoleId(int userId, int roleId);
 }

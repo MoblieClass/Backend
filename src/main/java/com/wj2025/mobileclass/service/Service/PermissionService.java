@@ -161,17 +161,17 @@ public class PermissionService {
         return false;
     }
 
-    public boolean deleteRoleFromUser(String role_name, String user_name) {
+    public void deleteRoleFromUser(String role_name, String user_name) {
         var role = roleService.findByName(role_name);
         if(role.isPresent()) {
             var user = userService.findByUsername(user_name);
             if(user.isPresent()) {
-                user_rolesService.deleteByUserIdAndRoleId(user.get().getId(),role.get().getId());
-                return true;
+                var deleted = user_rolesService.findByUserIdAndRoleId(user.get().getId(),role.get().getId());
+                for(var deleted_role : deleted) {
+                    user_rolesService.deleteById((long)deleted_role.getId());
+                }
             }
-            return false;
         }
-        return false;
     }
 
     public boolean checkHasPermission(String user_name, String permission_name) {

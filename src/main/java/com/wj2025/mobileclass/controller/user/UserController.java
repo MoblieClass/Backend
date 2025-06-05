@@ -53,13 +53,13 @@ public class UserController {
         }
         var selfModel = self.get();
         // 更新字段（只更新非空字段）
-        if (dto.getName() != null) selfModel.setName(dto.getName());
+        if (dto.getName() != null && !dto.name.isEmpty()) selfModel.setName(dto.getName());
         if (dto.getAge() != null) selfModel.setAge(dto.getAge());
-        if (dto.getAddress() != null) selfModel.setAddress(dto.getAddress());
-        if (dto.getPhone() != null) selfModel.setPhone(dto.getPhone());
-        if (dto.getEmail() != null) selfModel.setEmail(dto.getEmail());
-        if (dto.getAvatar() != null) selfModel.setAvatar(dto.getAvatar());
-        if (dto.getPassword() != null) selfModel.setPassword(dto.getPassword());
+        if (dto.getAddress() != null && !dto.address.isEmpty()) selfModel.setAddress(dto.getAddress());
+        if (dto.getPhone() != null && !dto.phone.isEmpty()) selfModel.setPhone(dto.getPhone());
+        if (dto.getEmail() != null && !dto.email.isEmpty()) selfModel.setEmail(dto.getEmail());
+        if (dto.getAvatar() != null && !dto.avatar.isEmpty()) selfModel.setAvatar(dto.getAvatar());
+        if (dto.getPassword() != null && !dto.password.isEmpty()) selfModel.setPassword(dto.getPassword());
 
         userService.modifyUser(selfModel);
         selfModel.setPassword("hide");
@@ -196,6 +196,10 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    private boolean isEmpty(String str) {
+        return str == null || str.trim().isEmpty();
+    }
+
     @PostMapping("/{username}")
     @Operation(summary = "更新用户信息，需要权限 user:modify")
     public ResponseEntity<?> updateUser(@PathVariable String username,@RequestBody UserUpdateRequest request){
@@ -209,12 +213,12 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         var user_instance = user.get();
-        user_instance.setEmail(request.email);
-        user_instance.setName(request.name);
-        user_instance.setPhone(request.phone);
+        user_instance.setEmail(isEmpty(request.email)?user_instance.getEmail():request.email);
+        user_instance.setName(isEmpty(request.name)?user_instance.getName():request.name);
+        user_instance.setPhone(isEmpty(request.phone)?user_instance.getPhone():request.phone);
         user_instance.setAge(request.age);
-        user_instance.setAddress(request.address);
-        user_instance.setPassword(request.password);
+        user_instance.setAddress(isEmpty(request.address)?user_instance.getAddress():request.address);
+        user_instance.setPassword(isEmpty(request.password)?user_instance.getPassword():request.password);
         userService.modifyUser(user_instance);
         return ResponseEntity.ok("success");
     }

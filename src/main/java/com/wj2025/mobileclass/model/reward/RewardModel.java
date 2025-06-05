@@ -14,9 +14,10 @@ public class RewardModel {
     private String description;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private boolean isFinished;
+    private boolean finished;
     private String bonus;
     private int creatorId;
+    private String creatorName;
 
     public int getId() {
         return id;
@@ -48,11 +49,11 @@ public class RewardModel {
     public void setEndDate(LocalDateTime end_date) {
         this.endDate = end_date;
     }
-    public boolean isIsFinished() {
-        return isFinished;
+    public boolean isFinished() {
+        return finished;
     }
-    public void setIsFinished(boolean is_finished) {
-        this.isFinished = is_finished;
+    public void setFinished(boolean is_finished) {
+        this.finished = is_finished;
     }
     public String getBonus() {
         return bonus;
@@ -65,5 +66,12 @@ public class RewardModel {
     }
     public void setCreatorId(int creator_id) {
         this.creatorId = creator_id;
+    }
+
+    public String getCreatorName() {
+        return creatorName;
+    }
+    public void setCreatorName(String creator_name) {
+        this.creatorName = creator_name;
     }
 }

@@ -1,6 +1,7 @@
 package com.wj2025.mobileclass.controller.permission;
 
 import com.wj2025.mobileclass.service.Service.PermissionService;
+import com.wj2025.mobileclass.service.Service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +16,10 @@ import org.springframework.web.bind.annotation.*;
 )
 public class PermissionController {
     private final PermissionService permissionService;
-    public PermissionController(PermissionService permissionService) {
+    private final UserService userService;
+    public PermissionController(PermissionService permissionService, UserService userService) {
         this.permissionService = permissionService;
+        this.userService = userService;
     }
 
     @GetMapping("/roles")
@@ -123,6 +126,45 @@ public class PermissionController {
         } else {
             return ResponseEntity.status(403).body("Permission denied");
         }
+    }
+
+    @PostMapping("/roles/bind")
+    @Operation(summary = "添加角色到用户，需要权限 root")
+    public ResponseEntity<?>addRolesToUser(@RequestParam String username, @RequestParam String roleName){
+        var currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(!permissionService.checkHasPermission(currentUsername, "root")){
+            return ResponseEntity.status(403).body("permission denied");
+        }
+        var role = permissionService.getRole(roleName);
+        if(role.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        var user = userService.getUserByUsername(username);
+        if(user.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        var result = permissionService.addRoleToUser(roleName,username);
+        return ResponseEntity.ok(result);
+    }
+
+    @DeleteMapping("/roles/bind")
+    @Operation(summary = "移除用户角色，需要权限 root")
+    public ResponseEntity<?>removeRolesToUser(@RequestParam String username){
+        var currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(!permissionService.checkHasPermission(currentUsername, "root")){
+            return ResponseEntity.status(403).body("permission denied");
+        }
+        var user = userService.getUserByUsername(username);
+        if(user.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        var roles = permissionService.getUserRoles(username);
+        if(!roles.isEmpty()){
+            for(var role : roles){
+                permissionService.deleteRoleFromUser(role.getName(),username);
+            }
+        }
+        return ResponseEntity.ok("success");
     }
 
     public static class AddPermissionRequest {
